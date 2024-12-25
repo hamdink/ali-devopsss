@@ -11,7 +11,6 @@ pipeline {
         DOCKER_COMPOSE = '/usr/local/bin/docker-compose'  /
     }
 
-// adddd comment
 
     stages {
         stage('Checkout') {
@@ -34,7 +33,7 @@ pipeline {
                     sh 'pwd'
                     sh 'ls -l'
                     sh 'docker build -f node.dockerfile -t hamdink/ali-devopsss:latest.'
-                    sh 'docker build -f php.dockerfile -t hamdink/ali-devopsss:latest.'
+                    sh 'docker build -f php.dockerfile -t hamdink/devopsDashboard:latest.'
                 }
             }
         }
