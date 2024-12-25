@@ -12,25 +12,35 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    networks:
+      - app_network
 
   backend:
     build: .
     restart: always
     ports:
-      - "3000:3000"
+      - "3002:3002"
     volumes:
       - ./uploads:/app/uploads
     depends_on:
       - mongo
+    networks:
+      - app_network
 
   frontend:
     build:
-      context: ../alibaba-vitrine
+      context: G:/alibaba-dashboard-admin
       dockerfile: Dockerfile
     restart: always
     ports:
       - "3001:3001"
     environment:
-      NEXT_PUBLIC_BACKEND_URL: "http://localhost:3000"
+      NEXT_PUBLIC_BACKEND_URL: "http://localhost:3002" # Use 'backend' service name
     depends_on:
       - backend
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

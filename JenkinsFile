@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+  environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        IMAGE_NAME_SERVER = 'hamdink/ali-devopsss'
+        IMAGE_NAME_CLIENT = 'hamdink/devopsDashboard'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        DOCKER_COMPOSE = '/usr/local/bin/docker-compose'  /
+    }
+
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'dev', url: 'hhttps://github.com/hamdink/ali-devopsss.git', credentialsId: 'github'
+            }
+        }
+
+        stage('Run Docker Compose') {
+            steps {
+                script {
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'pwd'
+                    sh 'ls -l'
+                    sh 'docker build -f node.dockerfile -t hamdink/ali-devopsss:latest.'
+                    sh 'docker build -f php.dockerfile -t hamdink/ali-devopsss:latest.'
+                }
+            }
+        }
+
+        stage('Push Images to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Use echo with --password-stdin for secure login
+                        sh '''
+                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        '''
+                        sh 'docker push hamdink/ali-devopsss:latest'
+                    }
+                }
+            }
+        }
+    }
+}
+
