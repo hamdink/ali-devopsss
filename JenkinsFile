@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'dev', url: 'hhttps://github.com/hamdink/ali-devopsss.git', credentialsId: 'github'
+                git branch: 'dev', url: 'https://github.com/hamdink/ali-devopsss.git', credentialsId: 'github'
             }
         }
 
