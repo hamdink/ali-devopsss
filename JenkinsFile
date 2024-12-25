@@ -11,6 +11,7 @@ pipeline {
         DOCKER_COMPOSE = '/usr/local/bin/docker-compose'  /
     }
 
+// adddd comment
 
     stages {
         stage('Checkout') {
